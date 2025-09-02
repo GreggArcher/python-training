@@ -1,5 +1,4 @@
 name: Build and Publish JupyterLite to GitHub Pages
-
 on:
   push:
     branches: [ main ]
@@ -15,20 +14,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
-      - name: Install JupyterLite
+      # NEW: install a kernel package so the Launcher shows "Python (Pyodide)"
+      - name: Install JupyterLite + Pyodide kernel
         run: |
           python -m pip install --upgrade pip
-          pip install "jupyterlite[all]"
-
-      # Adjust --contents if your notebooks live elsewhere
+          pip install jupyterlite-core jupyterlite-pyodide-kernel
       - name: Build site
         run: jupyter lite build --contents ./content --output-dir ./_output
-
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
